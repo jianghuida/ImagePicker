@@ -8,6 +8,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.WindowManager;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -57,7 +58,7 @@ public class PhotoPickerActivity extends AppCompatActivity {
 
     setContentView(R.layout.__picker_activity_photo_picker);
 
-    Toolbar mToolbar = (Toolbar) findViewById(R.id.toolbar);
+    Toolbar mToolbar = findViewById(R.id.toolbar);
     setSupportActionBar(mToolbar);
     setTitle(R.string.__picker_title);
 
@@ -67,6 +68,11 @@ public class PhotoPickerActivity extends AppCompatActivity {
     actionBar.setDisplayHomeAsUpEnabled(true);
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
       actionBar.setElevation(25);
+    }
+
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+      WindowManager.LayoutParams localLayoutParams = getWindow().getAttributes();
+      localLayoutParams.flags = (WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS | localLayoutParams.flags);
     }
 
     maxCount = getIntent().getIntExtra(EXTRA_MAX_COUNT, DEFAULT_MAX_COUNT);
