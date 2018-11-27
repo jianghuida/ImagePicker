@@ -8,7 +8,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.WindowManager;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -18,8 +17,6 @@ import com.sys.jf.imagepicker.entity.Photo;
 import com.sys.jf.imagepicker.event.OnItemCheckListener;
 import com.sys.jf.imagepicker.fragment.ImagePagerFragment;
 import com.sys.jf.imagepicker.fragment.PhotoPickerFragment;
-
-import com.sys.jf.imagepicker.R;
 
 import static android.widget.Toast.LENGTH_LONG;
 import static com.sys.jf.imagepicker.PhotoPicker.DEFAULT_COLUMN_NUMBER;
@@ -32,7 +29,7 @@ import static com.sys.jf.imagepicker.PhotoPicker.EXTRA_SHOW_CAMERA;
 import static com.sys.jf.imagepicker.PhotoPicker.EXTRA_SHOW_GIF;
 import static com.sys.jf.imagepicker.PhotoPicker.KEY_SELECTED_PHOTOS;
 
-public class PhotoPickerActivity extends AppCompatActivity {
+public class PhotoPickerActivity extends AppCompatActivity{
 
   private PhotoPickerFragment pickerFragment;
   private ImagePagerFragment imagePagerFragment;
@@ -68,11 +65,7 @@ public class PhotoPickerActivity extends AppCompatActivity {
     actionBar.setDisplayHomeAsUpEnabled(true);
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
       actionBar.setElevation(25);
-    }
-
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-      WindowManager.LayoutParams localLayoutParams = getWindow().getAttributes();
-      localLayoutParams.flags = (WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS | localLayoutParams.flags);
+      getWindow().setStatusBarColor(getResources().getColor(R.color.colorPrimary));
     }
 
     maxCount = getIntent().getIntExtra(EXTRA_MAX_COUNT, DEFAULT_MAX_COUNT);
