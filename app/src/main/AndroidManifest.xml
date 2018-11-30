@@ -18,15 +18,7 @@
 
         <activity android:name=".PhotoPickerActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/ColorTranslucentTheme">
-
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <action android:name="android.intent.action.VIEW"/>
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-
-        </activity>
+            android:theme="@style/ColorTranslucentTheme"/>
 
         <activity android:name=".PhotoPagerActivity"
             android:screenOrientation="portrait"/>
