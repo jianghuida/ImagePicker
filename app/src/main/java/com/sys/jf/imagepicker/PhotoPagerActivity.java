@@ -79,10 +79,10 @@ public class PhotoPagerActivity extends AppCompatActivity {
 
 
   @Override public void onBackPressed() {
-    super.onBackPressed();
     Intent intent = new Intent();
     intent.putExtra(KEY_SELECTED_PHOTOS, pagerFragment.getPaths());
     setResult(RESULT_OK, intent);
+    super.onBackPressed();
   }
 
 
