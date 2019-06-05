@@ -13,6 +13,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -40,7 +41,7 @@ public class PhotoPagerActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.__picker_activity_photo_pager);
-
+        this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         int currentItem = getIntent().getIntExtra(EXTRA_CURRENT_ITEM, 0);
         List<String> paths = getIntent().getStringArrayListExtra(EXTRA_PHOTOS);
         boolean showDelete = getIntent().getBooleanExtra(EXTRA_SHOW_DELETE, true);
@@ -54,6 +55,7 @@ public class PhotoPagerActivity extends AppCompatActivity {
         photoNumberTv = findViewById(R.id.photo_number);
         ImageView imgDestroyPage = findViewById(R.id.img_destory_page);
         ImageView imgDeletePhoto = findViewById(R.id.img_delete_photo);
+        updateActionBarTitle();
         imgDestroyPage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
