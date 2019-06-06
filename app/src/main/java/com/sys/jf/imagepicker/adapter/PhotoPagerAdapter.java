@@ -57,17 +57,6 @@ public class PhotoPagerAdapter extends PagerAdapter {
               .thumbnail(0.1f)
               .into(imageView);
     }
-
-    imageView.setOnClickListener(new View.OnClickListener() {
-      @Override public void onClick(View view) {
-        if (context instanceof Activity) {
-          if (!((Activity) context).isFinishing()) {
-            ((Activity) context).onBackPressed();
-          }
-        }
-      }
-    });
-
     container.addView(itemView);
 
     return itemView;
