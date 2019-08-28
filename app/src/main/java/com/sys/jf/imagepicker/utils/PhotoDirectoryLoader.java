@@ -24,19 +24,18 @@ public class PhotoDirectoryLoader extends CursorLoader {
   public PhotoDirectoryLoader(Context context, boolean showGif) {
     super(context);
 
-    setProjection(IMAGE_PROJECTION);
+    setProjection(null);
     setUri(Media.EXTERNAL_CONTENT_URI);
     setSortOrder(Media.DATE_ADDED + " DESC");
 
-    setSelection(
-        MIME_TYPE + "=? or " + MIME_TYPE + "=? or " + MIME_TYPE + "=? or " + MIME_TYPE + "=? " + (showGif ? ("or " + MIME_TYPE + "=?") : ""));
+    setSelection(null);
     String[] selectionArgs;
     if (showGif) {
-      selectionArgs = new String[] { "image/jpeg", "image/png", "image/jpg", "image/bmp", "image/x-ms-bmp", "image/gif" };
+      selectionArgs = new String[] { "image/jpeg", "image/png", "image/jpg", "image/x-ms-bmp", "image/gif" };
     } else {
-      selectionArgs = new String[] { "image/jpeg", "image/png", "image/jpg", "image/bmp", "image/x-ms-bmp" };
+      selectionArgs = new String[] { "image/jpeg", "image/png", "image/jpg", "image/x-ms-bmp"};
     }
-    setSelectionArgs(selectionArgs);
+    setSelectionArgs(null);
   }
 
 
