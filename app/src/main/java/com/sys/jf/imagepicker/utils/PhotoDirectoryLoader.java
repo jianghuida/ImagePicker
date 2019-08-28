@@ -12,6 +12,7 @@ import static android.provider.MediaStore.MediaColumns.MIME_TYPE;
  */
 public class PhotoDirectoryLoader extends CursorLoader {
 
+  /*
   final String[] IMAGE_PROJECTION = {
       Media._ID,
       Media.DATA,
@@ -19,12 +20,12 @@ public class PhotoDirectoryLoader extends CursorLoader {
       Media.BUCKET_DISPLAY_NAME,
       Media.DATE_ADDED,
       Media.SIZE
-  };
+  };*/
 
   public PhotoDirectoryLoader(Context context, boolean showGif) {
     super(context);
 
-    setProjection(IMAGE_PROJECTION);
+    setProjection(null);
     setUri(Media.EXTERNAL_CONTENT_URI);
     setSortOrder(Media.DATE_ADDED + " DESC");
 
@@ -40,7 +41,7 @@ public class PhotoDirectoryLoader extends CursorLoader {
   }
 
 
-  public PhotoDirectoryLoader(Context context, Uri uri, String[] projection, String selection,
+  private PhotoDirectoryLoader(Context context, Uri uri, String[] projection, String selection,
       String[] selectionArgs, String sortOrder) {
     super(context, uri, projection, selection, selectionArgs, sortOrder);
   }

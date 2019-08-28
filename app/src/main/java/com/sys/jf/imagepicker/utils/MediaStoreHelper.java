@@ -3,7 +3,6 @@ package com.sys.jf.imagepicker.utils;
 import android.content.Context;
 import android.database.Cursor;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
@@ -45,7 +44,7 @@ public class MediaStoreHelper {
     }
 
     @Override public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-      return new PhotoDirectoryLoader(context, MediaStore.Images.Media.EXTERNAL_CONTENT_URI, null, null, null, null);
+      return new PhotoDirectoryLoader(context, args.getBoolean(PhotoPicker.EXTRA_SHOW_GIF, false));
     }
 
     @Override public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
