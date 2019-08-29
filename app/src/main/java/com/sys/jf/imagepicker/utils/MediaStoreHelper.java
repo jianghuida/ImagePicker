@@ -3,6 +3,7 @@ package com.sys.jf.imagepicker.utils;
 import android.content.Context;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
@@ -18,6 +19,7 @@ import static android.provider.MediaStore.Images.ImageColumns.BUCKET_DISPLAY_NAM
 import static android.provider.MediaStore.Images.ImageColumns.BUCKET_ID;
 import static android.provider.MediaStore.MediaColumns.DATA;
 import static android.provider.MediaStore.MediaColumns.DATE_ADDED;
+import static android.provider.MediaStore.MediaColumns.MIME_TYPE;
 import static android.provider.MediaStore.MediaColumns.SIZE;
 
 /**
@@ -44,7 +46,8 @@ public class MediaStoreHelper {
     }
 
     @Override public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-      return new PhotoDirectoryLoader(context, args.getBoolean(PhotoPicker.EXTRA_SHOW_GIF, false));
+      String[] selectionArgs = new String[] { "image/jpeg", "image/png", "image/jpg", "image/x-ms-bmp"};
+      return new PhotoDirectoryLoader(context, MediaStore.Images.Media.EXTERNAL_CONTENT_URI, null, MIME_TYPE + "=? or " + MIME_TYPE + "=? or " + MIME_TYPE + "=? or " + MIME_TYPE + "=? ", selectionArgs, MediaStore.Images.Media.DATE_ADDED + " DESC");
     }
 
     @Override public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
