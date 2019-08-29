@@ -46,8 +46,7 @@ public class MediaStoreHelper {
     }
 
     @Override public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-      String[] selectionArgs = new String[] { "image/jpeg", "image/png", "image/jpg", "image/x-ms-bmp"};
-      return new PhotoDirectoryLoader(context, MediaStore.Images.Media.EXTERNAL_CONTENT_URI, null, null, selectionArgs, MediaStore.Images.Media.DATE_ADDED + " DESC");
+      return new PhotoDirectoryLoader(context, MediaStore.Images.Media.EXTERNAL_CONTENT_URI, null, null, null, MediaStore.Images.Media.DATE_ADDED + " DESC");
     }
 
     @Override public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
@@ -67,6 +66,7 @@ public class MediaStoreHelper {
         long size = data.getInt(data.getColumnIndexOrThrow(SIZE));
 
         if (size < 1) continue;
+        if (path.length() > 4 && path.substring(path.length() - 4).equals(".gif")) continue;
 
         PhotoDirectory photoDirectory = new PhotoDirectory();
         photoDirectory.setId(bucketId);
