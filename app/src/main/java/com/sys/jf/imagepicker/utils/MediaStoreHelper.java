@@ -47,7 +47,7 @@ public class MediaStoreHelper {
 
     @Override public Loader<Cursor> onCreateLoader(int id, Bundle args) {
       String[] selectionArgs = new String[] { "image/jpeg", "image/png", "image/jpg", "image/x-ms-bmp"};
-      return new PhotoDirectoryLoader(context, MediaStore.Images.Media.EXTERNAL_CONTENT_URI, null, MIME_TYPE + "=? or " + MIME_TYPE + "=? or " + MIME_TYPE + "=? or " + MIME_TYPE + "=? ", selectionArgs, MediaStore.Images.Media.DATE_ADDED + " DESC");
+      return new PhotoDirectoryLoader(context, MediaStore.Images.Media.EXTERNAL_CONTENT_URI, null, null, selectionArgs, MediaStore.Images.Media.DATE_ADDED + " DESC");
     }
 
     @Override public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
