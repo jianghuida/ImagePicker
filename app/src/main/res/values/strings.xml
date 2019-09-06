@@ -13,4 +13,5 @@
   <string name="__picker_all_image">All Images</string>
   <string name="__picker_image_count">%1$d</string>
   <string name="__picker_over_max_count_tips">You can only select %1$d images</string>
+  <string name="min_file_size_limit">图片尺寸过小</string>
 </resources>

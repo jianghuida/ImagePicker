@@ -19,6 +19,7 @@ import com.sys.jf.imagepicker.entity.PhotoDirectory;
 import com.sys.jf.imagepicker.event.OnItemCheckListener;
 import com.sys.jf.imagepicker.event.OnPhotoClickListener;
 import com.sys.jf.imagepicker.utils.AndroidLifecycleUtils;
+import com.sys.jf.imagepicker.utils.FileUtils;
 import com.sys.jf.imagepicker.utils.MediaStoreHelper;
 
 /**
@@ -27,6 +28,7 @@ import com.sys.jf.imagepicker.utils.MediaStoreHelper;
 public class PhotoGridAdapter extends SelectableAdapter<PhotoGridAdapter.PhotoViewHolder> {
 
   private RequestManager glide;
+  private Context context;
 
   private OnItemCheckListener onItemCheckListener    = null;
   private OnPhotoClickListener onPhotoClickListener  = null;
@@ -44,7 +46,8 @@ public class PhotoGridAdapter extends SelectableAdapter<PhotoGridAdapter.PhotoVi
 
 
   public PhotoGridAdapter(Context context, RequestManager requestManager, List<PhotoDirectory> photoDirectories) {
-    this.photoDirectories = photoDirectories;
+      this.context = context;
+      this.photoDirectories = photoDirectories;
     this.glide = requestManager;
     setColumnNumber(context, columnNumber);
   }
@@ -139,7 +142,10 @@ public class PhotoGridAdapter extends SelectableAdapter<PhotoGridAdapter.PhotoVi
         @Override public void onClick(View view) {
           int pos = holder.getAdapterPosition();
           boolean isEnable = true;
-
+          if (!isSelected(photo) && !FileUtils.isSizeFit(photo.getPath())) {
+              FileUtils.CustomCenterToast(context, R.string.min_file_size_limit);
+              return;
+          }
           if (onItemCheckListener != null) {
             isEnable = onItemCheckListener.onItemCheck(pos, photo,
                     getSelectedPhotos().size() + (isSelected(photo) ? -1: 1));
