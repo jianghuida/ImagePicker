@@ -45,6 +45,7 @@ import com.sys.jf.imagepicker.R;
 
 import static android.app.Activity.RESULT_OK;
 import static com.sys.jf.imagepicker.PhotoPicker.DEFAULT_COLUMN_NUMBER;
+import static com.sys.jf.imagepicker.PhotoPicker.EXTRA_LIMIT_SIZE;
 import static com.sys.jf.imagepicker.PhotoPicker.EXTRA_PREVIEW_ENABLED;
 import static com.sys.jf.imagepicker.PhotoPicker.EXTRA_SHOW_GIF;
 import static com.sys.jf.imagepicker.utils.MediaStoreHelper.INDEX_ALL_PHOTOS;
@@ -76,11 +77,12 @@ public class PhotoPickerFragment extends Fragment {
   private RequestManager mGlideRequestManager;
 
   public static PhotoPickerFragment newInstance(boolean showCamera, boolean showGif,
-      boolean previewEnable, int column, int maxCount, ArrayList<String> originalPhotos) {
+      boolean previewEnable, boolean limitSize, int column, int maxCount, ArrayList<String> originalPhotos) {
     Bundle args = new Bundle();
     args.putBoolean(EXTRA_CAMERA, showCamera);
     args.putBoolean(EXTRA_GIF, showGif);
     args.putBoolean(EXTRA_PREVIEW_ENABLED, previewEnable);
+    args.putBoolean(EXTRA_LIMIT_SIZE, limitSize);
     args.putInt(EXTRA_COLUMN, column);
     args.putInt(EXTRA_COUNT, maxCount);
     args.putStringArrayList(EXTRA_ORIGIN, originalPhotos);
@@ -102,10 +104,12 @@ public class PhotoPickerFragment extends Fragment {
     column = getArguments().getInt(EXTRA_COLUMN, DEFAULT_COLUMN_NUMBER);
     boolean showCamera = getArguments().getBoolean(EXTRA_CAMERA, true);
     boolean previewEnable = getArguments().getBoolean(EXTRA_PREVIEW_ENABLED, true);
+    boolean limitSize = getArguments().getBoolean(EXTRA_LIMIT_SIZE, false);
 
     photoGridAdapter = new PhotoGridAdapter(getActivity(), mGlideRequestManager, directories, originalPhotos, column);
     photoGridAdapter.setShowCamera(showCamera);
     photoGridAdapter.setPreviewEnable(previewEnable);
+    photoGridAdapter.isLimitSize(limitSize);
 
     listAdapter  = new PopupDirectoryListAdapter(mGlideRequestManager, directories);
 

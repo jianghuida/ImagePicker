@@ -40,6 +40,7 @@ public class PhotoGridAdapter extends SelectableAdapter<PhotoGridAdapter.PhotoVi
 
   private boolean hasCamera = true;
   private boolean previewEnable = true;
+  private boolean limitSize = false;
 
   private int imageSize;
   private int columnNumber = COL_NUMBER_DEFAULT;
@@ -142,7 +143,7 @@ public class PhotoGridAdapter extends SelectableAdapter<PhotoGridAdapter.PhotoVi
         @Override public void onClick(View view) {
           int pos = holder.getAdapterPosition();
           boolean isEnable = true;
-          if (!isSelected(photo) && !FileUtils.isSizeFit(photo.getPath())) {
+          if (limitSize && !isSelected(photo) && !FileUtils.isSizeFit(photo.getPath())) {
               FileUtils.CustomCenterToast(context, R.string.min_file_size_limit);
               return;
           }
@@ -217,6 +218,10 @@ public class PhotoGridAdapter extends SelectableAdapter<PhotoGridAdapter.PhotoVi
 
   public void setPreviewEnable(boolean previewEnable) {
     this.previewEnable = previewEnable;
+  }
+
+  public void isLimitSize(boolean limitSize) {
+    this.limitSize = limitSize;
   }
 
   public boolean showCamera() {
