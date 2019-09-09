@@ -5,6 +5,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+
+import java.io.Serializable;
 import java.util.ArrayList;
 
 import com.sys.jf.imagepicker.utils.PermissionsUtils;
@@ -30,12 +32,13 @@ public class PhotoPicker {
   public final static String EXTRA_PREVIEW_ENABLED = "PREVIEW_ENABLED";
   public final static String EXTRA_LIMIT_SIZE = "LIMIT_SIZE";
   public final static String EXTRA_LIMIT_LISTENER = "LIMIT_LISTENER";
+  public final static String EXTRA_BUILDER = "BUILDER";
 
   public static PhotoPickerBuilder builder() {
     return new PhotoPickerBuilder();
   }
 
-  public static class PhotoPickerBuilder {
+  public static class PhotoPickerBuilder implements Serializable {
     private Bundle mPickerOptionsBundle;
     private Intent mPickerIntent;
     private OnLimitSizeListener onLimitSizeListener;
@@ -148,6 +151,7 @@ public class PhotoPicker {
 
     public PhotoPickerBuilder setOnLimitSizeListener(OnLimitSizeListener onLimitSizeListener) {
       this.onLimitSizeListener = onLimitSizeListener;
+      mPickerOptionsBundle.putSerializable(EXTRA_BUILDER, this);
       return this;
     }
   }

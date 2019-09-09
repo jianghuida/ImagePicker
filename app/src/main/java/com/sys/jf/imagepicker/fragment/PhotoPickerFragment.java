@@ -26,9 +26,11 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.RequestManager;
 
 import java.io.IOException;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.sys.jf.imagepicker.PhotoPicker;
 import com.sys.jf.imagepicker.PhotoPickerActivity;
 import com.sys.jf.imagepicker.R;
 import com.sys.jf.imagepicker.adapter.PhotoGridAdapter;
@@ -44,6 +46,7 @@ import com.sys.jf.imagepicker.utils.PermissionsUtils;
 
 import static android.app.Activity.RESULT_OK;
 import static com.sys.jf.imagepicker.PhotoPicker.DEFAULT_COLUMN_NUMBER;
+import static com.sys.jf.imagepicker.PhotoPicker.EXTRA_BUILDER;
 import static com.sys.jf.imagepicker.PhotoPicker.EXTRA_LIMIT_SIZE;
 import static com.sys.jf.imagepicker.PhotoPicker.EXTRA_PREVIEW_ENABLED;
 import static com.sys.jf.imagepicker.PhotoPicker.EXTRA_SHOW_GIF;
@@ -105,6 +108,7 @@ public class PhotoPickerFragment extends Fragment {
         boolean showCamera = getArguments().getBoolean(EXTRA_CAMERA, true);
         boolean previewEnable = getArguments().getBoolean(EXTRA_PREVIEW_ENABLED, true);
         boolean limitSize = getArguments().getBoolean(EXTRA_LIMIT_SIZE, false);
+        final PhotoPicker.PhotoPickerBuilder builder = (PhotoPicker.PhotoPickerBuilder) getArguments().getSerializable(EXTRA_BUILDER);
 
         photoGridAdapter = new PhotoGridAdapter(getActivity(), mGlideRequestManager, directories, originalPhotos, column);
         photoGridAdapter.setShowCamera(showCamera);
@@ -114,7 +118,15 @@ public class PhotoPickerFragment extends Fragment {
             @Override
             public void onLimit() {
                 if (getActivity() instanceof PhotoPickerActivity) {
-                    getActivity().setResult(Activity.RESULT_CANCELED);
+                    try {
+                        Class cls = builder.getClass();
+                        Method method = cls.getDeclaredMethod("invokeLimit");
+                        method.setAccessible(true);
+                        Object obj = cls.newInstance();
+                        method.invoke(obj, null);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                 }
             }
         });
