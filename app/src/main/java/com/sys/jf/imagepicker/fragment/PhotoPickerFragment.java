@@ -28,7 +28,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.sys.jf.imagepicker.PhotoPicker;
 import com.sys.jf.imagepicker.PhotoPickerActivity;
 import com.sys.jf.imagepicker.R;
 import com.sys.jf.imagepicker.adapter.PhotoGridAdapter;
@@ -43,8 +42,8 @@ import com.sys.jf.imagepicker.utils.PermissionsConstant;
 import com.sys.jf.imagepicker.utils.PermissionsUtils;
 
 import static android.app.Activity.RESULT_OK;
+import static com.sys.jf.imagepicker.PhotoPicker.ACTION_LIMIT_SIZE;
 import static com.sys.jf.imagepicker.PhotoPicker.DEFAULT_COLUMN_NUMBER;
-import static com.sys.jf.imagepicker.PhotoPicker.EXTRA_BINDER;
 import static com.sys.jf.imagepicker.PhotoPicker.EXTRA_LIMIT_SIZE;
 import static com.sys.jf.imagepicker.PhotoPicker.EXTRA_PREVIEW_ENABLED;
 import static com.sys.jf.imagepicker.PhotoPicker.EXTRA_SHOW_GIF;
@@ -106,7 +105,6 @@ public class PhotoPickerFragment extends Fragment {
         boolean showCamera = getArguments().getBoolean(EXTRA_CAMERA, true);
         boolean previewEnable = getArguments().getBoolean(EXTRA_PREVIEW_ENABLED, true);
         boolean limitSize = getArguments().getBoolean(EXTRA_LIMIT_SIZE, false);
-        final PhotoPicker.LimitBinder binder = (PhotoPicker.LimitBinder) getArguments().getBinder(EXTRA_BINDER);
 
         photoGridAdapter = new PhotoGridAdapter(getActivity(), mGlideRequestManager, directories, originalPhotos, column);
         photoGridAdapter.setShowCamera(showCamera);
@@ -115,8 +113,8 @@ public class PhotoPickerFragment extends Fragment {
         photoGridAdapter.setOnLimitListener(new PhotoGridAdapter.OnLimitListener() {
             @Override
             public void onLimit() {
-                if (getActivity() instanceof PhotoPickerActivity && binder != null) {
-                    binder.onLimitSize();
+                if (getActivity() instanceof PhotoPickerActivity) {
+                    sendLimitBroadCast();
                 }
             }
         });
@@ -349,5 +347,11 @@ public class PhotoPickerFragment extends Fragment {
         }
 
         mGlideRequestManager.resumeRequests();
+    }
+
+    public void sendLimitBroadCast() {
+        Intent broadcastIntent = new Intent();
+        broadcastIntent.setAction(ACTION_LIMIT_SIZE);
+        getActivity().sendBroadcast(broadcastIntent);
     }
 }

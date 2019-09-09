@@ -33,13 +33,13 @@ public class PhotoPicker {
     public final static String EXTRA_PREVIEW_ENABLED = "PREVIEW_ENABLED";
     public final static String EXTRA_LIMIT_SIZE = "LIMIT_SIZE";
     public final static String EXTRA_LIMIT_LISTENER = "LIMIT_LISTENER";
-    public final static String EXTRA_BINDER = "BINDER";
+    public final static String ACTION_LIMIT_SIZE = "ACTION_LIMIT_SIZE";
 
     public static PhotoPickerBuilder builder() {
         return new PhotoPickerBuilder();
     }
 
-    public static class LimitBinder extends Binder implements OnLimitSizeListener {
+    public class LimitBinder extends Binder implements OnLimitSizeListener {
         @Override
         public void onLimitSize() {
 
@@ -146,16 +146,6 @@ public class PhotoPicker {
 
         public PhotoPickerBuilder isLimitSize(boolean limitSize) {
             mPickerOptionsBundle.putBoolean(EXTRA_LIMIT_SIZE, limitSize);
-            return this;
-        }
-
-        public PhotoPickerBuilder setBinder(Binder binder) {
-            mPickerOptionsBundle.putBinder(EXTRA_BINDER, binder);
-            return this;
-        }
-
-        public PhotoPickerBuilder setmBinder(LimitBinder binder) {
-            mPickerOptionsBundle.putBinder(EXTRA_BINDER, binder);
             return this;
         }
     }
