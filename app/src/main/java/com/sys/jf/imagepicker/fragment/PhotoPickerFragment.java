@@ -1,5 +1,6 @@
 package com.sys.jf.imagepicker.fragment;
 
+import android.app.Activity;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -25,12 +26,9 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.RequestManager;
 
 import java.io.IOException;
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.sys.jf.imagepicker.PhotoPicker;
 import com.sys.jf.imagepicker.PhotoPickerActivity;
 import com.sys.jf.imagepicker.R;
 import com.sys.jf.imagepicker.adapter.PhotoGridAdapter;
@@ -116,15 +114,7 @@ public class PhotoPickerFragment extends Fragment {
             @Override
             public void onLimit() {
                 if (getActivity() instanceof PhotoPickerActivity) {
-                    try {
-                        Class cls = PhotoPicker.PhotoPickerBuilder.class;
-                        Method method = cls.getDeclaredMethod("invokeLimit");
-                        method.setAccessible(true);
-                        Object obj = cls.newInstance();
-                        method.invoke(obj, null);
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
+                    getActivity().setResult(Activity.RESULT_CANCELED);
                 }
             }
         });
