@@ -39,7 +39,7 @@ public class PhotoPicker {
         return new PhotoPickerBuilder();
     }
 
-    public class LimitBinder extends Binder implements OnLimitSizeListener {
+    public static class LimitBinder extends Binder implements OnLimitSizeListener {
         @Override
         public void onLimitSize() {
 
