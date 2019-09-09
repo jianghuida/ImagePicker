@@ -38,11 +38,22 @@ public class PhotoPicker {
   public static class PhotoPickerBuilder {
     private Bundle mPickerOptionsBundle;
     private Intent mPickerIntent;
+    private OnLimitSizeListener onLimitSizeListener;
 
     public PhotoPickerBuilder() {
       mPickerOptionsBundle = new Bundle();
       mPickerIntent = new Intent();
     }
+
+      public interface OnLimitSizeListener{
+          void onLimitSize();
+      }
+
+      public void invokeLimit() {
+        if (onLimitSizeListener != null) {
+            onLimitSizeListener.onLimitSize();
+        }
+      }
 
     /**
      * Send the Intent from an Activity with a custom request code
@@ -135,8 +146,8 @@ public class PhotoPicker {
       return this;
     }
 
-    public PhotoPickerBuilder setOnLimitSizeListener(PhotoPickerActivity.OnLimitSizeListener onLimitSizeListener) {
-      mPickerOptionsBundle.putSerializable(EXTRA_LIMIT_LISTENER, onLimitSizeListener);
+    public PhotoPickerBuilder setOnLimitSizeListener(OnLimitSizeListener onLimitSizeListener) {
+      this.onLimitSizeListener = onLimitSizeListener;
       return this;
     }
   }
