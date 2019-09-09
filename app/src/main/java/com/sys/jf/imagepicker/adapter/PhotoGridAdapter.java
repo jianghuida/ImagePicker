@@ -8,11 +8,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.ImageView;
+
 import com.bumptech.glide.RequestManager;
 import com.bumptech.glide.request.RequestOptions;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+
 import com.sys.jf.imagepicker.R;
 import com.sys.jf.imagepicker.entity.Photo;
 import com.sys.jf.imagepicker.entity.PhotoDirectory;
@@ -27,209 +30,226 @@ import com.sys.jf.imagepicker.utils.MediaStoreHelper;
  */
 public class PhotoGridAdapter extends SelectableAdapter<PhotoGridAdapter.PhotoViewHolder> {
 
-  private RequestManager glide;
-  private Context context;
+    private RequestManager glide;
+    private Context context;
 
-  private OnItemCheckListener onItemCheckListener    = null;
-  private OnPhotoClickListener onPhotoClickListener  = null;
-  private View.OnClickListener onCameraClickListener = null;
+    private OnItemCheckListener onItemCheckListener = null;
+    private OnPhotoClickListener onPhotoClickListener = null;
+    private View.OnClickListener onCameraClickListener = null;
+    private OnLimitListener onLimitListener = null;
 
-  public final static int ITEM_TYPE_CAMERA = 100;
-  public final static int ITEM_TYPE_PHOTO  = 101;
-  private final static int COL_NUMBER_DEFAULT = 3;
+    public final static int ITEM_TYPE_CAMERA = 100;
+    public final static int ITEM_TYPE_PHOTO = 101;
+    private final static int COL_NUMBER_DEFAULT = 3;
 
-  private boolean hasCamera = true;
-  private boolean previewEnable = true;
-  private boolean limitSize = false;
+    private boolean hasCamera = true;
+    private boolean previewEnable = true;
+    private boolean limitSize = false;
 
-  private int imageSize;
-  private int columnNumber = COL_NUMBER_DEFAULT;
-
-
-  public PhotoGridAdapter(Context context, RequestManager requestManager, List<PhotoDirectory> photoDirectories) {
-      this.context = context;
-      this.photoDirectories = photoDirectories;
-    this.glide = requestManager;
-    setColumnNumber(context, columnNumber);
-  }
-
-  public PhotoGridAdapter(Context context, RequestManager requestManager,  List<PhotoDirectory> photoDirectories, ArrayList<String> orginalPhotos, int colNum) {
-    this(context, requestManager, photoDirectories);
-    setColumnNumber(context, colNum);
-    selectedPhotos = new ArrayList<>();
-    if (orginalPhotos != null) selectedPhotos.addAll(orginalPhotos);
-  }
-
-  private void setColumnNumber(Context context, int columnNumber) {
-    this.columnNumber = columnNumber;
-    WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
-    DisplayMetrics metrics = new DisplayMetrics();
-    wm.getDefaultDisplay().getMetrics(metrics);
-    int widthPixels = metrics.widthPixels;
-    imageSize = widthPixels / columnNumber;
-  }
-
-  @Override public int getItemViewType(int position) {
-    return (showCamera() && position == 0) ? ITEM_TYPE_CAMERA : ITEM_TYPE_PHOTO;
-  }
+    private int imageSize;
+    private int columnNumber = COL_NUMBER_DEFAULT;
 
 
-  @Override public PhotoViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-    final View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.__picker_item_photo, parent, false);
-    final PhotoViewHolder holder = new PhotoViewHolder(itemView);
-    if (viewType == ITEM_TYPE_CAMERA) {
-      holder.vSelected.setVisibility(View.GONE);
-      holder.ivPhoto.setScaleType(ImageView.ScaleType.CENTER);
-
-      holder.ivPhoto.setOnClickListener(new View.OnClickListener() {
-        @Override public void onClick(View view) {
-          if (onCameraClickListener != null) {
-            onCameraClickListener.onClick(view);
-          }
-        }
-      });
+    public PhotoGridAdapter(Context context, RequestManager requestManager, List<PhotoDirectory> photoDirectories) {
+        this.context = context;
+        this.photoDirectories = photoDirectories;
+        this.glide = requestManager;
+        setColumnNumber(context, columnNumber);
     }
-    return holder;
-  }
+
+    public PhotoGridAdapter(Context context, RequestManager requestManager, List<PhotoDirectory> photoDirectories, ArrayList<String> orginalPhotos, int colNum) {
+        this(context, requestManager, photoDirectories);
+        setColumnNumber(context, colNum);
+        selectedPhotos = new ArrayList<>();
+        if (orginalPhotos != null) selectedPhotos.addAll(orginalPhotos);
+    }
+
+    private void setColumnNumber(Context context, int columnNumber) {
+        this.columnNumber = columnNumber;
+        WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
+        DisplayMetrics metrics = new DisplayMetrics();
+        wm.getDefaultDisplay().getMetrics(metrics);
+        int widthPixels = metrics.widthPixels;
+        imageSize = widthPixels / columnNumber;
+    }
+
+    @Override
+    public int getItemViewType(int position) {
+        return (showCamera() && position == 0) ? ITEM_TYPE_CAMERA : ITEM_TYPE_PHOTO;
+    }
 
 
-  @Override public void onBindViewHolder(final PhotoViewHolder holder, int position) {
+    @Override
+    public PhotoViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        final View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.__picker_item_photo, parent, false);
+        final PhotoViewHolder holder = new PhotoViewHolder(itemView);
+        if (viewType == ITEM_TYPE_CAMERA) {
+            holder.vSelected.setVisibility(View.GONE);
+            holder.ivPhoto.setScaleType(ImageView.ScaleType.CENTER);
 
-    if (getItemViewType(position) == ITEM_TYPE_PHOTO) {
+            holder.ivPhoto.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (onCameraClickListener != null) {
+                        onCameraClickListener.onClick(view);
+                    }
+                }
+            });
+        }
+        return holder;
+    }
 
-      List<Photo> photos = getCurrentPhotos();
-      final Photo photo;
 
-      if (showCamera()) {
-        photo = photos.get(position - 1);
-      } else {
-        photo = photos.get(position);
-      }
+    @Override
+    public void onBindViewHolder(final PhotoViewHolder holder, int position) {
 
-      boolean canLoadImage = AndroidLifecycleUtils.canLoadImage(holder.ivPhoto.getContext());
+        if (getItemViewType(position) == ITEM_TYPE_PHOTO) {
 
-      if (canLoadImage) {
-        final RequestOptions options = new RequestOptions();
-        options.centerCrop()
-            .dontAnimate()
-            .override(imageSize, imageSize)
-            .placeholder(R.drawable.__picker_ic_photo_black_48dp)
-            .error(R.drawable.__picker_ic_broken_image_black_48dp);
+            List<Photo> photos = getCurrentPhotos();
+            final Photo photo;
 
-        glide.setDefaultRequestOptions(options)
-                .load(new File(photo.getPath()))
-                .thumbnail(0.5f)
-                .into(holder.ivPhoto);
-      }
-
-      final boolean isChecked = isSelected(photo);
-
-      holder.vSelected.setSelected(isChecked);
-      holder.ivPhoto.setSelected(isChecked);
-
-      holder.ivPhoto.setOnClickListener(new View.OnClickListener() {
-        @Override public void onClick(View view) {
-          if (onPhotoClickListener != null) {
-            int pos = holder.getAdapterPosition();
-            if (previewEnable) {
-              onPhotoClickListener.onClick(view, pos, showCamera());
+            if (showCamera()) {
+                photo = photos.get(position - 1);
             } else {
-              holder.vSelected.performClick();
+                photo = photos.get(position);
             }
-          }
+
+            boolean canLoadImage = AndroidLifecycleUtils.canLoadImage(holder.ivPhoto.getContext());
+
+            if (canLoadImage) {
+                final RequestOptions options = new RequestOptions();
+                options.centerCrop()
+                        .dontAnimate()
+                        .override(imageSize, imageSize)
+                        .placeholder(R.drawable.__picker_ic_photo_black_48dp)
+                        .error(R.drawable.__picker_ic_broken_image_black_48dp);
+
+                glide.setDefaultRequestOptions(options)
+                        .load(new File(photo.getPath()))
+                        .thumbnail(0.5f)
+                        .into(holder.ivPhoto);
+            }
+
+            final boolean isChecked = isSelected(photo);
+
+            holder.vSelected.setSelected(isChecked);
+            holder.ivPhoto.setSelected(isChecked);
+
+            holder.ivPhoto.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (onPhotoClickListener != null) {
+                        int pos = holder.getAdapterPosition();
+                        if (previewEnable) {
+                            onPhotoClickListener.onClick(view, pos, showCamera());
+                        } else {
+                            holder.vSelected.performClick();
+                        }
+                    }
+                }
+            });
+            holder.vSelected.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    int pos = holder.getAdapterPosition();
+                    boolean isEnable = true;
+                    if (limitSize && !isSelected(photo) && !FileUtils.isSizeFit(photo.getPath())) {
+                        if (onLimitListener != null) {
+                            onLimitListener.onLimit();
+                        }
+                        return;
+                    }
+                    if (onItemCheckListener != null) {
+                        isEnable = onItemCheckListener.onItemCheck(pos, photo,
+                                getSelectedPhotos().size() + (isSelected(photo) ? -1 : 1));
+                    }
+                    if (isEnable) {
+                        toggleSelection(photo);
+                        notifyItemChanged(pos);
+                    }
+                }
+            });
+
+        } else {
+            holder.ivPhoto.setImageResource(R.drawable.__picker_camera);
         }
-      });
-      holder.vSelected.setOnClickListener(new View.OnClickListener() {
-        @Override public void onClick(View view) {
-          int pos = holder.getAdapterPosition();
-          boolean isEnable = true;
-          if (limitSize && !isSelected(photo) && !FileUtils.isSizeFit(photo.getPath())) {
-              FileUtils.CustomCenterToast(context, R.string.min_file_size_limit);
-              return;
-          }
-          if (onItemCheckListener != null) {
-            isEnable = onItemCheckListener.onItemCheck(pos, photo,
-                    getSelectedPhotos().size() + (isSelected(photo) ? -1: 1));
-          }
-          if (isEnable) {
-            toggleSelection(photo);
-            notifyItemChanged(pos);
-          }
+    }
+
+
+    @Override
+    public int getItemCount() {
+        int photosCount =
+                photoDirectories.size() == 0 ? 0 : getCurrentPhotos().size();
+        if (showCamera()) {
+            return photosCount + 1;
         }
-      });
-
-    } else {
-      holder.ivPhoto.setImageResource(R.drawable.__picker_camera);
-    }
-  }
-
-
-  @Override public int getItemCount() {
-    int photosCount =
-        photoDirectories.size() == 0 ? 0 : getCurrentPhotos().size();
-    if (showCamera()) {
-      return photosCount + 1;
-    }
-    return photosCount;
-  }
-
-
-  public static class PhotoViewHolder extends RecyclerView.ViewHolder {
-    private ImageView ivPhoto;
-    private View vSelected;
-
-    public PhotoViewHolder(View itemView) {
-      super(itemView);
-      ivPhoto   = (ImageView) itemView.findViewById(R.id.iv_photo);
-      vSelected = itemView.findViewById(R.id.v_selected);
-    }
-  }
-
-
-  public void setOnItemCheckListener(OnItemCheckListener onItemCheckListener) {
-    this.onItemCheckListener = onItemCheckListener;
-  }
-
-
-  public void setOnPhotoClickListener(OnPhotoClickListener onPhotoClickListener) {
-    this.onPhotoClickListener = onPhotoClickListener;
-  }
-
-
-  public void setOnCameraClickListener(View.OnClickListener onCameraClickListener) {
-    this.onCameraClickListener = onCameraClickListener;
-  }
-
-
-  public ArrayList<String> getSelectedPhotoPaths() {
-    ArrayList<String> selectedPhotoPaths = new ArrayList<>(getSelectedItemCount());
-
-    for (String photo : selectedPhotos) {
-      selectedPhotoPaths.add(photo);
+        return photosCount;
     }
 
-    return selectedPhotoPaths;
-  }
+    public static class PhotoViewHolder extends RecyclerView.ViewHolder {
+        private ImageView ivPhoto;
+        private View vSelected;
+
+        public PhotoViewHolder(View itemView) {
+            super(itemView);
+            ivPhoto = (ImageView) itemView.findViewById(R.id.iv_photo);
+            vSelected = itemView.findViewById(R.id.v_selected);
+        }
+    }
+
+    public interface OnLimitListener {
+        void onLimit();
+    }
+
+    public void setOnLimitListener(OnLimitListener onLimitListener) {
+        this.onLimitListener = onLimitListener;
+    }
+
+    public void setOnItemCheckListener(OnItemCheckListener onItemCheckListener) {
+        this.onItemCheckListener = onItemCheckListener;
+    }
 
 
-  public void setShowCamera(boolean hasCamera) {
-    this.hasCamera = hasCamera;
-  }
+    public void setOnPhotoClickListener(OnPhotoClickListener onPhotoClickListener) {
+        this.onPhotoClickListener = onPhotoClickListener;
+    }
 
-  public void setPreviewEnable(boolean previewEnable) {
-    this.previewEnable = previewEnable;
-  }
 
-  public void isLimitSize(boolean limitSize) {
-    this.limitSize = limitSize;
-  }
+    public void setOnCameraClickListener(View.OnClickListener onCameraClickListener) {
+        this.onCameraClickListener = onCameraClickListener;
+    }
 
-  public boolean showCamera() {
-    return (hasCamera && currentDirectoryIndex == MediaStoreHelper.INDEX_ALL_PHOTOS);
-  }
 
-  @Override public void onViewRecycled(PhotoViewHolder holder) {
-    glide.clear(holder.ivPhoto);
-    super.onViewRecycled(holder);
-  }
+    public ArrayList<String> getSelectedPhotoPaths() {
+        ArrayList<String> selectedPhotoPaths = new ArrayList<>(getSelectedItemCount());
+
+        for (String photo : selectedPhotos) {
+            selectedPhotoPaths.add(photo);
+        }
+
+        return selectedPhotoPaths;
+    }
+
+
+    public void setShowCamera(boolean hasCamera) {
+        this.hasCamera = hasCamera;
+    }
+
+    public void setPreviewEnable(boolean previewEnable) {
+        this.previewEnable = previewEnable;
+    }
+
+    public void isLimitSize(boolean limitSize) {
+        this.limitSize = limitSize;
+    }
+
+    public boolean showCamera() {
+        return (hasCamera && currentDirectoryIndex == MediaStoreHelper.INDEX_ALL_PHOTOS);
+    }
+
+    @Override
+    public void onViewRecycled(PhotoViewHolder holder) {
+        glide.clear(holder.ivPhoto);
+        super.onViewRecycled(holder);
+    }
 }

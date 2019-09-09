@@ -1,15 +1,7 @@
 package com.sys.jf.imagepicker.utils;
 
-import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.util.DisplayMetrics;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.widget.TextView;
-
-import com.hjq.toast.ToastUtils;
-import com.sys.jf.imagepicker.R;
 
 import java.io.File;
 
@@ -19,7 +11,6 @@ import java.io.File;
  * Description:
  */
 public class FileUtils {
-    public static int screenWidth = 0;
 
     public static boolean fileIsExists(String path) {
         if (path == null || path.trim().length() <= 0) {
@@ -54,31 +45,5 @@ public class FileUtils {
          *options.outHeight为原始图片的高
          */
         return new int[]{options.outWidth, options.outHeight};
-    }
-
-    public static int getScreenWidth(Context context) {
-        if (screenWidth == 0) {
-            DisplayMetrics dm = context.getResources().getDisplayMetrics();
-            screenWidth = dm.widthPixels;
-        }
-        return screenWidth;
-    }
-
-    public static void CustomCenterToast(Context context, final String text, final int layoutId) {
-        //获取自定义视图
-        View view = LayoutInflater.from(context).inflate(layoutId, null);
-        TextView tvToast = view.findViewById(R.id.tv_toast);
-        tvToast.setMaxWidth((int) (getScreenWidth(context) * 0.8));
-        tvToast.setMinWidth((int) (getScreenWidth(context) * 0.45));
-        tvToast.setTop(14);
-        tvToast.setRight(20);
-        //设置文本
-        tvToast.setText(text);
-        ToastUtils.setView(view);
-        ToastUtils.show(text);
-    }
-
-    public static void CustomCenterToast(Context context, int resId) {
-        CustomCenterToast(context, context.getString(resId), R.layout.layout_custom_toast);
     }
 }

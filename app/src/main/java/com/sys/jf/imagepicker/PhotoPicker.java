@@ -1,14 +1,12 @@
 package com.sys.jf.imagepicker;
 
 import android.app.Activity;
-import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import java.util.ArrayList;
 
-import com.hjq.toast.ToastUtils;
 import com.sys.jf.imagepicker.utils.PermissionsUtils;
 
 /**
@@ -31,6 +29,7 @@ public class PhotoPicker {
   public final static String EXTRA_ORIGINAL_PHOTOS = "ORIGINAL_PHOTOS";
   public final static String EXTRA_PREVIEW_ENABLED = "PREVIEW_ENABLED";
   public final static String EXTRA_LIMIT_SIZE = "LIMIT_SIZE";
+  public final static String EXTRA_LIMIT_LISTENER = "LIMIT_LISTENER";
 
   public static PhotoPickerBuilder builder() {
     return new PhotoPickerBuilder();
@@ -51,9 +50,8 @@ public class PhotoPicker {
      * @param activity    Activity to receive result
      * @param requestCode requestCode for result
      */
-    public void start(Application application, @NonNull Activity activity, int requestCode) {
+    public void start(@NonNull Activity activity, int requestCode) {
       if (PermissionsUtils.checkReadStoragePermission(activity)) {
-        ToastUtils.init(application);
         activity.startActivityForResult(getIntent(activity), requestCode);
       }
     }
@@ -63,10 +61,9 @@ public class PhotoPicker {
      * @param fragment    Fragment to receive result
      * @param requestCode requestCode for result
      */
-    public void start(Application application, @NonNull Context context,
+    public void start(@NonNull Context context,
                       @NonNull android.support.v4.app.Fragment fragment, int requestCode) {
       if (PermissionsUtils.checkReadStoragePermission(fragment.getActivity())) {
-        ToastUtils.init(application);
         fragment.startActivityForResult(getIntent(context), requestCode);
       }
     }
@@ -76,10 +73,9 @@ public class PhotoPicker {
      *
      * @param fragment    Fragment to receive result
      */
-    public void start(Application application, @NonNull Context context,
+    public void start(@NonNull Context context,
                       @NonNull android.support.v4.app.Fragment fragment) {
       if (PermissionsUtils.checkReadStoragePermission(fragment.getActivity())) {
-        ToastUtils.init(application);
         fragment.startActivityForResult(getIntent(context), REQUEST_CODE);
       }
     }
@@ -100,8 +96,8 @@ public class PhotoPicker {
      *
      * @param activity Activity to receive result
      */
-    public void start(Application application, @NonNull Activity activity) {
-      start(application, activity, REQUEST_CODE);
+    public void start(@NonNull Activity activity) {
+      start(activity, REQUEST_CODE);
     }
 
     public PhotoPickerBuilder setPhotoCount(int photoCount) {
@@ -136,6 +132,11 @@ public class PhotoPicker {
 
     public PhotoPickerBuilder isLimitSize(boolean limitSize) {
       mPickerOptionsBundle.putBoolean(EXTRA_LIMIT_SIZE, limitSize);
+      return this;
+    }
+
+    public PhotoPickerBuilder setOnLimitSizeListener(PhotoPickerActivity.OnLimitSizeListener onLimitSizeListener) {
+      mPickerOptionsBundle.putSerializable(EXTRA_LIMIT_LISTENER, onLimitSizeListener);
       return this;
     }
   }

@@ -10,6 +10,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,6 +23,7 @@ import static android.widget.Toast.LENGTH_LONG;
 import static com.sys.jf.imagepicker.PhotoPicker.DEFAULT_COLUMN_NUMBER;
 import static com.sys.jf.imagepicker.PhotoPicker.DEFAULT_MAX_COUNT;
 import static com.sys.jf.imagepicker.PhotoPicker.EXTRA_GRID_COLUMN;
+import static com.sys.jf.imagepicker.PhotoPicker.EXTRA_LIMIT_LISTENER;
 import static com.sys.jf.imagepicker.PhotoPicker.EXTRA_LIMIT_SIZE;
 import static com.sys.jf.imagepicker.PhotoPicker.EXTRA_MAX_COUNT;
 import static com.sys.jf.imagepicker.PhotoPicker.EXTRA_ORIGINAL_PHOTOS;
@@ -35,6 +37,7 @@ public class PhotoPickerActivity extends AppCompatActivity{
   private PhotoPickerFragment pickerFragment;
   private ImagePagerFragment imagePagerFragment;
   private MenuItem menuDoneItem;
+  private OnLimitSizeListener onLimitSizeListener;
 
   private int maxCount = DEFAULT_MAX_COUNT;
 
@@ -44,6 +47,17 @@ public class PhotoPickerActivity extends AppCompatActivity{
   private boolean showGif = false;
   private ArrayList<String> originalPhotos = null;
 
+  public interface OnLimitSizeListener extends Serializable {
+    void onLimitSize();
+  }
+
+  public void setOnLimitSizeListener(OnLimitSizeListener onLimitSizeListener) {
+    this.onLimitSizeListener = onLimitSizeListener;
+  }
+
+  public OnLimitSizeListener getOnLimitSizeListener() {
+    return onLimitSizeListener;
+  }
 
   @Override protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -52,6 +66,7 @@ public class PhotoPickerActivity extends AppCompatActivity{
     boolean showGif         = getIntent().getBooleanExtra(EXTRA_SHOW_GIF, false);
     boolean previewEnabled  = getIntent().getBooleanExtra(EXTRA_PREVIEW_ENABLED, true);
     boolean limitSize = getIntent().getBooleanExtra(EXTRA_LIMIT_SIZE, false);
+    onLimitSizeListener = (OnLimitSizeListener) getIntent().getSerializableExtra(EXTRA_LIMIT_LISTENER);
 
     setShowGif(showGif);
 
