@@ -1,6 +1,5 @@
 package com.sys.jf.imagepicker.fragment;
 
-import android.app.Activity;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -26,7 +25,6 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.RequestManager;
 
 import java.io.IOException;
-import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -46,7 +44,7 @@ import com.sys.jf.imagepicker.utils.PermissionsUtils;
 
 import static android.app.Activity.RESULT_OK;
 import static com.sys.jf.imagepicker.PhotoPicker.DEFAULT_COLUMN_NUMBER;
-import static com.sys.jf.imagepicker.PhotoPicker.EXTRA_BUILDER;
+import static com.sys.jf.imagepicker.PhotoPicker.EXTRA_BINDER;
 import static com.sys.jf.imagepicker.PhotoPicker.EXTRA_LIMIT_SIZE;
 import static com.sys.jf.imagepicker.PhotoPicker.EXTRA_PREVIEW_ENABLED;
 import static com.sys.jf.imagepicker.PhotoPicker.EXTRA_SHOW_GIF;
@@ -108,7 +106,7 @@ public class PhotoPickerFragment extends Fragment {
         boolean showCamera = getArguments().getBoolean(EXTRA_CAMERA, true);
         boolean previewEnable = getArguments().getBoolean(EXTRA_PREVIEW_ENABLED, true);
         boolean limitSize = getArguments().getBoolean(EXTRA_LIMIT_SIZE, false);
-        final PhotoPicker.PhotoPickerBuilder builder = (PhotoPicker.PhotoPickerBuilder) getArguments().getSerializable(EXTRA_BUILDER);
+        final PhotoPicker.LimitBinder binder = (PhotoPicker.LimitBinder) getArguments().getBinder(EXTRA_BINDER);
 
         photoGridAdapter = new PhotoGridAdapter(getActivity(), mGlideRequestManager, directories, originalPhotos, column);
         photoGridAdapter.setShowCamera(showCamera);
@@ -117,16 +115,8 @@ public class PhotoPickerFragment extends Fragment {
         photoGridAdapter.setOnLimitListener(new PhotoGridAdapter.OnLimitListener() {
             @Override
             public void onLimit() {
-                if (getActivity() instanceof PhotoPickerActivity) {
-                    try {
-                        Class cls = builder.getClass();
-                        Method method = cls.getDeclaredMethod("invokeLimit");
-                        method.setAccessible(true);
-                        Object obj = cls.newInstance();
-                        method.invoke(obj, null);
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
+                if (getActivity() instanceof PhotoPickerActivity && binder != null) {
+                    binder.onLimitSize();
                 }
             }
         });
