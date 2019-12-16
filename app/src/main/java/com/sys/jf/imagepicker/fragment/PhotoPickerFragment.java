@@ -74,6 +74,7 @@ public class PhotoPickerFragment extends Fragment {
     private final static String EXTRA_ORIGIN = "origin";
     private ListPopupWindow listPopupWindow;
     private RequestManager mGlideRequestManager;
+    private boolean firstLoad;
 
     public static PhotoPickerFragment newInstance(boolean showCamera, boolean showGif,
                                                   boolean previewEnable, boolean limitSize, int column, int maxCount, ArrayList<String> originalPhotos) {
@@ -125,18 +126,20 @@ public class PhotoPickerFragment extends Fragment {
 
         boolean showGif = getArguments().getBoolean(EXTRA_GIF);
         mediaStoreArgs.putBoolean(EXTRA_SHOW_GIF, showGif);
-        MediaStoreHelper.getPhotoDirs(getActivity(), mediaStoreArgs,
-                new MediaStoreHelper.PhotosResultCallback() {
-                    @Override
-                    public void onResultCallback(List<PhotoDirectory> dirs) {
-                        //directories.clear();
-                        //directories.addAll(dirs);
-                        photoGridAdapter.notifyDataSetChanged();
-                        listAdapter.notifyDataSetChanged();
-                        adjustHeight();
-                    }
-                });
-
+        if (!firstLoad) {
+            MediaStoreHelper.getPhotoDirs(getActivity(), mediaStoreArgs,
+                    new MediaStoreHelper.PhotosResultCallback() {
+                        @Override
+                        public void onResultCallback(List<PhotoDirectory> dirs) {
+                            directories.clear();
+                            directories.addAll(dirs);
+                            photoGridAdapter.notifyDataSetChanged();
+                            listAdapter.notifyDataSetChanged();
+                            adjustHeight();
+                            firstLoad = true;
+                        }
+                    });
+        }
         captureManager = new ImageCaptureManager(getActivity());
     }
 
