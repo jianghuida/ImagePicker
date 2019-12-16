@@ -129,8 +129,8 @@ public class PhotoPickerFragment extends Fragment {
                 new MediaStoreHelper.PhotosResultCallback() {
                     @Override
                     public void onResultCallback(List<PhotoDirectory> dirs) {
-                        directories.clear();
-                        directories.addAll(dirs);
+                        //directories.clear();
+                        //directories.addAll(dirs);
                         photoGridAdapter.notifyDataSetChanged();
                         listAdapter.notifyDataSetChanged();
                         adjustHeight();
