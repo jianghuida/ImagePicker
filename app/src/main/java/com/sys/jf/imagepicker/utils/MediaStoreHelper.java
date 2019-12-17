@@ -46,7 +46,7 @@ public class MediaStoreHelper {
     }
 
     @Override public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-      return new PhotoDirectoryLoader(context, args.getBoolean(PhotoPicker.EXTRA_SHOW_GIF, false));
+      return new PhotoDirectoryLoader(context, MediaStore.Images.Media.EXTERNAL_CONTENT_URI, null, null, null, MediaStore.Images.Media.DATE_ADDED + " DESC");
     }
 
     @Override public void onLoadFinished(Loader<Cursor> loader, Cursor data) {

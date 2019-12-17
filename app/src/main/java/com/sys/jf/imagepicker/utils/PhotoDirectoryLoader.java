@@ -42,7 +42,7 @@ public class PhotoDirectoryLoader extends CursorLoader {
 
   public PhotoDirectoryLoader(Context context, Uri uri, String[] projection, String selection,
       String[] selectionArgs, String sortOrder) {
-    super(context, uri, projection, selection, selectionArgs, sortOrder);
+    super(context, uri, null, MIME_TYPE + "=? or " + MIME_TYPE + "=? or " + MIME_TYPE + "=? or " + MIME_TYPE + "=?", new String[] { "image/jpeg", "image/png", "image/jpg", "image/gif" }, sortOrder);
   }
 
 
