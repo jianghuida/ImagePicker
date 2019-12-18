@@ -46,7 +46,7 @@ public class MediaStoreHelper {
     }
 
     @Override public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-      return new PhotoDirectoryLoader(context, true);
+      return new PhotoDirectoryLoader(context, args.getBoolean(PhotoPicker.EXTRA_SHOW_GIF, false));
     }
 
     @Override public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
@@ -66,7 +66,7 @@ public class MediaStoreHelper {
         long size = data.getInt(data.getColumnIndexOrThrow(SIZE));
 
         if (size < 1) continue;
-        if (path.length() > 4 && path.substring(path.length() - 4).equals(".gif")) continue;
+        //if (path.length() > 4 && path.substring(path.length() - 4).equals(".gif")) continue;
 
         PhotoDirectory photoDirectory = new PhotoDirectory();
         photoDirectory.setId(bucketId);
