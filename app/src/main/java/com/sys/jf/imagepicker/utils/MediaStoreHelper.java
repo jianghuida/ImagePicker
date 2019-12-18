@@ -3,23 +3,22 @@ package com.sys.jf.imagepicker.utils;
 import android.content.Context;
 import android.database.Cursor;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
-import java.lang.ref.WeakReference;
+
+import com.sys.jf.imagepicker.PhotoPicker;
+import com.sys.jf.imagepicker.entity.PhotoDirectory;
+
 import java.util.ArrayList;
 import java.util.List;
-import com.sys.jf.imagepicker.PhotoPicker;
 import com.sys.jf.imagepicker.R;
-import com.sys.jf.imagepicker.entity.PhotoDirectory;
 
 import static android.provider.BaseColumns._ID;
 import static android.provider.MediaStore.Images.ImageColumns.BUCKET_DISPLAY_NAME;
 import static android.provider.MediaStore.Images.ImageColumns.BUCKET_ID;
 import static android.provider.MediaStore.MediaColumns.DATA;
 import static android.provider.MediaStore.MediaColumns.DATE_ADDED;
-import static android.provider.MediaStore.MediaColumns.MIME_TYPE;
 import static android.provider.MediaStore.MediaColumns.SIZE;
 
 /**
@@ -32,7 +31,7 @@ public class MediaStoreHelper {
 
   public static void getPhotoDirs(FragmentActivity activity, Bundle args, PhotosResultCallback resultCallback) {
     activity.getSupportLoaderManager()
-        .initLoader(0, args, new PhotoDirLoaderCallbacks(activity, resultCallback));
+            .initLoader(0, args, new PhotoDirLoaderCallbacks(activity, resultCallback));
   }
 
   private static class PhotoDirLoaderCallbacks implements LoaderManager.LoaderCallbacks<Cursor> {
@@ -66,7 +65,6 @@ public class MediaStoreHelper {
         long size = data.getInt(data.getColumnIndexOrThrow(SIZE));
 
         if (size < 1) continue;
-        //if (path.length() > 4 && path.substring(path.length() - 4).equals(".gif")) continue;
 
         PhotoDirectory photoDirectory = new PhotoDirectory();
         photoDirectory.setId(bucketId);
