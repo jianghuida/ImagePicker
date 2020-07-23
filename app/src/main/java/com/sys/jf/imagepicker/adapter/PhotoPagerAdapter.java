@@ -8,6 +8,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+
+import com.bumptech.glide.Glide;
 import com.bumptech.glide.RequestManager;
 import com.bumptech.glide.request.RequestOptions;
 import java.io.File;
@@ -36,8 +38,8 @@ public class PhotoPagerAdapter extends PagerAdapter {
     View itemView = LayoutInflater.from(context)
         .inflate(R.layout.__picker_picker_item_pager, container, false);
 
-    final PhotoView imageView = itemView.findViewById(R.id.iv_pager);
-
+    PhotoView imageView = itemView.findViewById(R.id.iv_pager);
+    imageView.setBackgroundColor(context.getResources().getColor(R.color.colorBlack));
     final String path = paths.get(position);
     final Uri uri;
     if (path.startsWith("http")) {
@@ -49,14 +51,8 @@ public class PhotoPagerAdapter extends PagerAdapter {
     boolean canLoadImage = AndroidLifecycleUtils.canLoadImage(context);
 
     if (canLoadImage) {
-      final RequestOptions options = new RequestOptions();
-      options.dontAnimate()
-          .dontTransform()
-          .override(800, 800)
-          .placeholder(R.drawable.__picker_ic_photo_black_48dp)
-          .error(R.drawable.__picker_ic_broken_image_black_48dp);
-      mGlide.setDefaultRequestOptions(options).load(uri)
-              .thumbnail(0.1f)
+      Glide.with(context)
+              .load(uri)
               .into(imageView);
     }
     container.addView(itemView);
