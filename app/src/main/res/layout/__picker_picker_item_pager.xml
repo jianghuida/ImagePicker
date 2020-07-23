@@ -7,7 +7,7 @@
     <!--android:fillViewport="true"-->
     <!--&gt;-->
 
-  <com.sys.jf.imagepicker.widget.TouchImageView
+  <com.github.chrisbanes.photoview.PhotoView
       xmlns:android="http://schemas.android.com/apk/res/android"
       android:gravity="center"
       android:layout_width="match_parent"
