@@ -53,7 +53,7 @@ public class PhotoPagerActivity extends AppCompatActivity {
                     (ImagePagerFragment) getSupportFragmentManager().findFragmentById(R.id.photoPagerFragment);
         }
         pagerFragment.setPhotos(paths, currentItem);
-
+        pagerFragment.setMaximumScale(maximunScale);
         photoNumberTv = findViewById(R.id.photo_number);
         ImageView imgDestroyPage = findViewById(R.id.img_destory_page);
         ImageView imgDeletePhoto = findViewById(R.id.img_delete_photo);
