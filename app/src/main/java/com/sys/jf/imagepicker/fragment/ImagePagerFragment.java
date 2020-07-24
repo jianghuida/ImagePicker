@@ -26,120 +26,118 @@ import com.sys.jf.imagepicker.R;
  */
 public class ImagePagerFragment extends Fragment {
 
-  public final static String ARG_PATH = "PATHS";
-  public final static String ARG_CURRENT_ITEM = "ARG_CURRENT_ITEM";
+    public final static String ARG_PATH = "PATHS";
+    public final static String ARG_CURRENT_ITEM = "ARG_CURRENT_ITEM";
 
-  private ArrayList<String> paths;
-  private ViewPager mViewPager;
-  private PhotoPagerAdapter mPagerAdapter;
-  private float maximumScale = 3f;
-  private int currentItem = 0;
-
-
-  public static ImagePagerFragment newInstance(List<String> paths, int currentItem) {
-
-    ImagePagerFragment f = new ImagePagerFragment();
-
-    Bundle args = new Bundle();
-    args.putStringArray(ARG_PATH, paths.toArray(new String[paths.size()]));
-    args.putInt(ARG_CURRENT_ITEM, currentItem);
-
-    f.setArguments(args);
-
-    return f;
-  }
-
-  @Override
-  public void onResume() {
-    super.onResume();
-    if(getActivity() instanceof PhotoPickerActivity){
-      PhotoPickerActivity photoPickerActivity = (PhotoPickerActivity) getActivity();
-      photoPickerActivity.updateTitleDoneItem();
-    }
-  }
-
-  public void setPhotos(List<String> paths, int currentItem) {
-    this.paths.clear();
-    this.paths.addAll(paths);
-    this.currentItem = currentItem;
-
-    mViewPager.setCurrentItem(currentItem);
-    mViewPager.getAdapter().notifyDataSetChanged();
-  }
-
-  public void setMaximumScale(float maxScale) {
-    maximumScale = maxScale;
-  }
+    private ArrayList<String> paths;
+    private ViewPager mViewPager;
+    private PhotoPagerAdapter mPagerAdapter;
+    private int currentItem = 0;
 
 
-  @Override public void onCreate(Bundle savedInstanceState) {
-    super.onCreate(savedInstanceState);
+    public static ImagePagerFragment newInstance(List<String> paths, int currentItem) {
 
-    paths = new ArrayList<>();
+        ImagePagerFragment f = new ImagePagerFragment();
 
-    Bundle bundle = getArguments();
+        Bundle args = new Bundle();
+        args.putStringArray(ARG_PATH, paths.toArray(new String[paths.size()]));
+        args.putInt(ARG_CURRENT_ITEM, currentItem);
 
-    if (bundle != null) {
-      String[] pathArr = bundle.getStringArray(ARG_PATH);
-      paths.clear();
-      if (pathArr != null) {
+        f.setArguments(args);
 
-        paths = new ArrayList<>(Arrays.asList(pathArr));
-      }
-
-      currentItem     = bundle.getInt(ARG_CURRENT_ITEM);
+        return f;
     }
 
-    mPagerAdapter = new PhotoPagerAdapter(Glide.with(this), paths, maximumScale);
-  }
-
-
-  @Nullable @Override public View onCreateView(LayoutInflater inflater, ViewGroup container,
-      Bundle savedInstanceState) {
-
-    View rootView = inflater.inflate(R.layout.__picker_picker_fragment_image_pager, container, false);
-
-    mViewPager = rootView.findViewById(R.id.vp_photos);
-    mViewPager.setAdapter(mPagerAdapter);
-    mViewPager.setCurrentItem(currentItem);
-    mViewPager.setOffscreenPageLimit(5);
-
-    return rootView;
-  }
-
-
-  public ViewPager getViewPager() {
-    return mViewPager;
-  }
-
-
-  public ArrayList<String> getPaths() {
-    return paths;
-  }
-
-
-  public ArrayList<String> getCurrentPath(){
-    ArrayList<String> list = new ArrayList<>();
-    int position = mViewPager.getCurrentItem();
-    if(paths != null && paths.size() > position){
-      list.add(paths.get(position));
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (getActivity() instanceof PhotoPickerActivity) {
+            PhotoPickerActivity photoPickerActivity = (PhotoPickerActivity) getActivity();
+            photoPickerActivity.updateTitleDoneItem();
+        }
     }
-    return list;
-  }
 
-
-  public int getCurrentItem() {
-    return mViewPager.getCurrentItem();
-  }
-
-  @Override public void onDestroy() {
-    super.onDestroy();
-
-    paths.clear();
-    paths = null;
-
-    if (mViewPager != null) {
-      mViewPager.setAdapter(null);
+    public void setPhotos(List<String> paths, int currentItem, float maxScale) {
+        this.paths.clear();
+        this.paths.addAll(paths);
+        this.currentItem = currentItem;
+        if (mPagerAdapter != null) mPagerAdapter.setMaximumScale(maxScale);
+        mViewPager.setCurrentItem(currentItem);
+        mViewPager.getAdapter().notifyDataSetChanged();
     }
-  }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        paths = new ArrayList<>();
+
+        Bundle bundle = getArguments();
+
+        if (bundle != null) {
+            String[] pathArr = bundle.getStringArray(ARG_PATH);
+            paths.clear();
+            if (pathArr != null) {
+
+                paths = new ArrayList<>(Arrays.asList(pathArr));
+            }
+
+            currentItem = bundle.getInt(ARG_CURRENT_ITEM);
+        }
+
+        mPagerAdapter = new PhotoPagerAdapter(Glide.with(this), paths);
+    }
+
+
+    @Nullable
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+
+        View rootView = inflater.inflate(R.layout.__picker_picker_fragment_image_pager, container, false);
+
+        mViewPager = rootView.findViewById(R.id.vp_photos);
+        mViewPager.setAdapter(mPagerAdapter);
+        mViewPager.setCurrentItem(currentItem);
+        mViewPager.setOffscreenPageLimit(5);
+
+        return rootView;
+    }
+
+
+    public ViewPager getViewPager() {
+        return mViewPager;
+    }
+
+
+    public ArrayList<String> getPaths() {
+        return paths;
+    }
+
+
+    public ArrayList<String> getCurrentPath() {
+        ArrayList<String> list = new ArrayList<>();
+        int position = mViewPager.getCurrentItem();
+        if (paths != null && paths.size() > position) {
+            list.add(paths.get(position));
+        }
+        return list;
+    }
+
+
+    public int getCurrentItem() {
+        return mViewPager.getCurrentItem();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+
+        paths.clear();
+        paths = null;
+
+        if (mViewPager != null) {
+            mViewPager.setAdapter(null);
+        }
+    }
 }

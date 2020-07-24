@@ -12,6 +12,7 @@ import android.widget.ImageView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.RequestManager;
 import com.bumptech.glide.request.RequestOptions;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
@@ -25,62 +26,70 @@ import com.sys.jf.imagepicker.utils.AndroidLifecycleUtils;
  */
 public class PhotoPagerAdapter extends PagerAdapter {
 
-  private List<String> paths = new ArrayList<>();
-  private RequestManager mGlide;
-  private float maximumScale = 3f;
+    private List<String> paths = new ArrayList<>();
+    private RequestManager mGlide;
+    private float maximumScale = 3f;
 
-  public PhotoPagerAdapter(RequestManager glide, List<String> paths, float maxScale) {
-    this.paths = paths;
-    this.mGlide = glide;
-    this.maximumScale = maxScale;
-  }
-
-  @Override public Object instantiateItem(ViewGroup container, int position) {
-    final Context context = container.getContext();
-    View itemView = LayoutInflater.from(context)
-        .inflate(R.layout.__picker_picker_item_pager, container, false);
-
-    PhotoView imageView = itemView.findViewById(R.id.iv_pager);
-    imageView.setMaximumScale(maximumScale);
-    imageView.setBackgroundColor(context.getResources().getColor(R.color.colorBlack));
-    final String path = paths.get(position);
-    final Uri uri;
-    if (path.startsWith("http")) {
-      uri = Uri.parse(path);
-    } else {
-      uri = Uri.fromFile(new File(path));
+    public PhotoPagerAdapter(RequestManager glide, List<String> paths) {
+        this.paths = paths;
+        this.mGlide = glide;
     }
 
-    boolean canLoadImage = AndroidLifecycleUtils.canLoadImage(context);
+    @Override
+    public Object instantiateItem(ViewGroup container, int position) {
+        final Context context = container.getContext();
+        View itemView = LayoutInflater.from(context)
+                .inflate(R.layout.__picker_picker_item_pager, container, false);
 
-    if (canLoadImage) {
-      Glide.with(context)
-              .load(uri)
-              .into(imageView);
+        PhotoView imageView = itemView.findViewById(R.id.iv_pager);
+        imageView.setMaximumScale(maximumScale);
+        imageView.setBackgroundColor(context.getResources().getColor(R.color.colorBlack));
+        final String path = paths.get(position);
+        final Uri uri;
+        if (path.startsWith("http")) {
+            uri = Uri.parse(path);
+        } else {
+            uri = Uri.fromFile(new File(path));
+        }
+
+        boolean canLoadImage = AndroidLifecycleUtils.canLoadImage(context);
+
+        if (canLoadImage) {
+            Glide.with(context)
+                    .load(uri)
+                    .into(imageView);
+        }
+        container.addView(itemView);
+
+        return itemView;
     }
-    container.addView(itemView);
-
-    return itemView;
-  }
 
 
-  @Override public int getCount() {
-    return paths.size();
-  }
+    @Override
+    public int getCount() {
+        return paths.size();
+    }
 
 
-  @Override public boolean isViewFromObject(View view, Object object) {
-    return view == object;
-  }
+    @Override
+    public boolean isViewFromObject(View view, Object object) {
+        return view == object;
+    }
 
 
-  @Override
-  public void destroyItem(ViewGroup container, int position, Object object) {
-    container.removeView((View) object);
-    mGlide.clear((View) object);
-  }
+    @Override
+    public void destroyItem(ViewGroup container, int position, Object object) {
+        container.removeView((View) object);
+        mGlide.clear((View) object);
+    }
 
-  @Override
-  public int getItemPosition (Object object) { return POSITION_NONE; }
+    @Override
+    public int getItemPosition(Object object) {
+        return POSITION_NONE;
+    }
+
+    public void setMaximumScale(float maxScale) {
+        maximumScale = maxScale;
+    }
 
 }
