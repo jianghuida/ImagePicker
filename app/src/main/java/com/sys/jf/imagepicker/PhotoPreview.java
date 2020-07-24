@@ -18,6 +18,7 @@ public class PhotoPreview {
   public final static String EXTRA_CURRENT_ITEM = "current_item";
   public final static String EXTRA_PHOTOS       = "photos";
   public final static String EXTRA_SHOW_DELETE  = "show_delete";
+  public final static String EXTRA_MAXIMUN_SCALE = "maximum_scale";
 
 
   public static PhotoPreviewBuilder builder() {
@@ -85,6 +86,11 @@ public class PhotoPreview {
 
     public PhotoPreviewBuilder setPhotos(ArrayList<String> photoPaths) {
       mPreviewOptionsBundle.putStringArrayList(EXTRA_PHOTOS, photoPaths);
+      return this;
+    }
+
+    public PhotoPreviewBuilder setMaximumScale(float maximumScale) {
+      mPreviewOptionsBundle.putFloat(EXTRA_MAXIMUN_SCALE, maximumScale);
       return this;
     }
 

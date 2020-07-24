@@ -32,7 +32,7 @@ public class ImagePagerFragment extends Fragment {
   private ArrayList<String> paths;
   private ViewPager mViewPager;
   private PhotoPagerAdapter mPagerAdapter;
-
+  private float maximumScale = 3f;
   private int currentItem = 0;
 
 
@@ -67,6 +67,10 @@ public class ImagePagerFragment extends Fragment {
     mViewPager.getAdapter().notifyDataSetChanged();
   }
 
+  public void setMaximumScale(float maxScale) {
+    maximumScale = maxScale;
+  }
+
 
   @Override public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -86,7 +90,7 @@ public class ImagePagerFragment extends Fragment {
       currentItem     = bundle.getInt(ARG_CURRENT_ITEM);
     }
 
-    mPagerAdapter = new PhotoPagerAdapter(Glide.with(this), paths);
+    mPagerAdapter = new PhotoPagerAdapter(Glide.with(this), paths, maximumScale);
   }
 
 

@@ -25,6 +25,7 @@ import com.sys.jf.imagepicker.R;
 
 import static com.sys.jf.imagepicker.PhotoPicker.KEY_SELECTED_PHOTOS;
 import static com.sys.jf.imagepicker.PhotoPreview.EXTRA_CURRENT_ITEM;
+import static com.sys.jf.imagepicker.PhotoPreview.EXTRA_MAXIMUN_SCALE;
 import static com.sys.jf.imagepicker.PhotoPreview.EXTRA_PHOTOS;
 import static com.sys.jf.imagepicker.PhotoPreview.EXTRA_SHOW_DELETE;
 
@@ -45,6 +46,7 @@ public class PhotoPagerActivity extends AppCompatActivity {
         int currentItem = getIntent().getIntExtra(EXTRA_CURRENT_ITEM, 0);
         List<String> paths = getIntent().getStringArrayListExtra(EXTRA_PHOTOS);
         boolean showDelete = getIntent().getBooleanExtra(EXTRA_SHOW_DELETE, true);
+        float maximunScale = getIntent().getFloatExtra(EXTRA_MAXIMUN_SCALE, 3f);
 
         if (pagerFragment == null) {
             pagerFragment =

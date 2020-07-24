@@ -27,10 +27,12 @@ public class PhotoPagerAdapter extends PagerAdapter {
 
   private List<String> paths = new ArrayList<>();
   private RequestManager mGlide;
+  private float maximumScale = 3f;
 
-  public PhotoPagerAdapter(RequestManager glide, List<String> paths) {
+  public PhotoPagerAdapter(RequestManager glide, List<String> paths, float maxScale) {
     this.paths = paths;
     this.mGlide = glide;
+    this.maximumScale = maxScale;
   }
 
   @Override public Object instantiateItem(ViewGroup container, int position) {
@@ -39,6 +41,7 @@ public class PhotoPagerAdapter extends PagerAdapter {
         .inflate(R.layout.__picker_picker_item_pager, container, false);
 
     PhotoView imageView = itemView.findViewById(R.id.iv_pager);
+    imageView.setMaximumScale(maximumScale);
     imageView.setBackgroundColor(context.getResources().getColor(R.color.colorBlack));
     final String path = paths.get(position);
     final Uri uri;
