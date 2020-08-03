@@ -6,6 +6,7 @@
   <color name="__picker_black_40">#282828</color>
   <color name="__picker_common_primary">#f3f3f3</color>
   <color name="colorBlack">@android:color/black</color>
+  <color name="colorPrimary60">#99FFA53A</color>
 
   <color name="__picker_text_40">#282828</color>
   <color name="__picker_text_80">#505050</color>

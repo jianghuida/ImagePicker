@@ -2,7 +2,7 @@
 <com.sys.jf.imagepicker.widget.SquareItemLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    >
+    xmlns:app="http://schemas.android.com/apk/res-auto">
   <ImageView
       android:padding="1dip"
       android:layout_gravity="center"
@@ -27,5 +27,32 @@
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       />
+
+  <FrameLayout
+      android:id="@+id/fl_gif"
+      android:layout_width="29dp"
+      android:layout_height="16dp"
+      android:layout_alignParentEnd="true"
+      android:layout_alignParentBottom="true"
+      android:visibility="gone">
+
+    <com.sys.jf.imagepicker.widget.RoundedImageView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:src="@color/colorPrimary60"
+        app:radiusLeftBottom="3dp"
+        app:radiusLeftTop="3dp"
+        app:radiusRightBottom="0dp"
+        app:radiusRightTop="0dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="16dp"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:text="GIF"
+        android:textColor="@color/colorWhite"
+        android:textSize="11sp" />
+  </FrameLayout>
 
 </com.sys.jf.imagepicker.widget.SquareItemLayout>
