@@ -3,7 +3,6 @@ package com.sys.jf.imagepicker.adapter;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
-import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,7 +12,6 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 
 import com.bumptech.glide.RequestManager;
-import com.bumptech.glide.request.RequestOptions;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -123,23 +121,11 @@ public class PhotoGridAdapter extends SelectableAdapter<PhotoGridAdapter.PhotoVi
             if (canLoadImage) {
                 if (photo.getPath().endsWith(".gif")) {
                     holder.flGif.setVisibility(View.VISIBLE);
-                    glide.asGif()
-                            .load(photo.getPath())
-                            .into(holder.ivPhoto);
                 } else {
                     holder.flGif.setVisibility(View.GONE);
-                    final RequestOptions options = new RequestOptions();
-                    options.centerCrop()
-                            .dontAnimate()
-                            .override(imageSize, imageSize)
-                            .placeholder(R.drawable.__picker_ic_photo_black_48dp)
-                            .error(R.drawable.__picker_ic_broken_image_black_48dp);
-
-                    glide.setDefaultRequestOptions(options)
-                            .load(new File(photo.getPath()))
-                            .thumbnail(0.5f)
-                            .into(holder.ivPhoto);
                 }
+                glide.load(new File(photo.getPath()))
+                        .into(holder.ivPhoto);
             }
 
             final boolean isChecked = isSelected(photo);
