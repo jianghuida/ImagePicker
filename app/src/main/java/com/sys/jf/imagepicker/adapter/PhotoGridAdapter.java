@@ -124,7 +124,7 @@ public class PhotoGridAdapter extends SelectableAdapter<PhotoGridAdapter.PhotoVi
                 if (photo.getPath().endsWith(".gif")) {
                     holder.flGif.setVisibility(View.VISIBLE);
                     glide.asGif()
-                            .load(new File(photo.getPath()))
+                            .load(photo.getPath())
                             .into(holder.ivPhoto);
                 } else {
                     holder.flGif.setVisibility(View.GONE);
