@@ -38,6 +38,7 @@ public class PhotoGridAdapter extends SelectableAdapter<PhotoGridAdapter.PhotoVi
     private OnPhotoClickListener onPhotoClickListener = null;
     private View.OnClickListener onCameraClickListener = null;
     private OnLimitListener onLimitListener = null;
+    private ArrayList<String> selectedGifList;
 
     public final static int ITEM_TYPE_CAMERA = 100;
     public final static int ITEM_TYPE_PHOTO = 101;
@@ -222,14 +223,22 @@ public class PhotoGridAdapter extends SelectableAdapter<PhotoGridAdapter.PhotoVi
 
     public ArrayList<String> getSelectedPhotoPaths() {
         ArrayList<String> selectedPhotoPaths = new ArrayList<>(getSelectedItemCount());
-
+        if (selectedGifList == null) {
+            selectedGifList = new ArrayList<>(getSelectedItemCount());
+        } else {
+            selectedGifList.clear();
+        }
         for (String photo : selectedPhotos) {
             selectedPhotoPaths.add(photo);
+            selectedGifList.add(photo.endsWith(".gif") ? "gif" : "");
         }
 
         return selectedPhotoPaths;
     }
 
+    public ArrayList<String> getSelectedGifList() {
+        return selectedGifList;
+    }
 
     public void setShowCamera(boolean hasCamera) {
         this.hasCamera = hasCamera;

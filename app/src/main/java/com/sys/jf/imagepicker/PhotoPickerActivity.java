@@ -30,6 +30,7 @@ import static com.sys.jf.imagepicker.PhotoPicker.EXTRA_ORIGINAL_PHOTOS;
 import static com.sys.jf.imagepicker.PhotoPicker.EXTRA_PREVIEW_ENABLED;
 import static com.sys.jf.imagepicker.PhotoPicker.EXTRA_SHOW_CAMERA;
 import static com.sys.jf.imagepicker.PhotoPicker.EXTRA_SHOW_GIF;
+import static com.sys.jf.imagepicker.PhotoPicker.KEY_SELECTED_GIF;
 import static com.sys.jf.imagepicker.PhotoPicker.KEY_SELECTED_PHOTOS;
 
 public class PhotoPickerActivity extends AppCompatActivity{
@@ -189,18 +190,23 @@ public class PhotoPickerActivity extends AppCompatActivity{
     if (item.getItemId() == R.id.done) {
       Intent intent = new Intent();
       ArrayList<String> selectedPhotos = null;
+      ArrayList<String> selectedGifList = null;
       if(pickerFragment != null){
         selectedPhotos = pickerFragment.getPhotoGridAdapter().getSelectedPhotoPaths();
+        selectedGifList = pickerFragment.getPhotoGridAdapter().getSelectedGifList();
       }
       //当在列表没有选择图片，又在详情界面时默认选择当前图片
       if(selectedPhotos.size() <= 0){
         if(imagePagerFragment != null && imagePagerFragment.isResumed()){
           // 预览界面
           selectedPhotos = imagePagerFragment.getCurrentPath();
+          if (selectedPhotos.size() > 0)
+            selectedGifList.add(selectedPhotos.get(0).endsWith(".gif") ? "gif" : "");
         }
       }
       if(selectedPhotos != null && selectedPhotos.size() > 0){
         intent.putStringArrayListExtra(KEY_SELECTED_PHOTOS, selectedPhotos);
+        intent.putStringArrayListExtra(KEY_SELECTED_GIF, selectedGifList);
         setResult(RESULT_OK, intent);
         finish();
       }
