@@ -19,6 +19,8 @@ import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
 public class PermissionsUtils {
 
     public static boolean checkReadStoragePermission(Activity activity) {
+        if (activity == null)
+            return false;
         if (android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.JELLY_BEAN) {
             return true;
         }
